@@ -1,0 +1,43 @@
+# This is a basic workflow to help you get started with Actions
+
+name: CI
+
+# Controls when the workflow will run
+on:
+  # Triggers the workflow on push or pull request events but only for the "main" branch
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
+
+# A workflow run is made up of one or more jobs that can run sequentially or in parallel
+jobs:
+  compile_parsers:
+    strategy:
+      matrix:
+        language: [csharp, java, javascript, python, ruby, php]
+
+    runs-on: ubuntu-latest
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      
+      - name: Install Kaitai
+        run: |
+          curl -LO https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/0.10/kaitai-struct-compiler_0.10_all.deb
+          sudo apt-get install ./kaitai-struct-compiler_0.10_all.deb
+          
+      - name: Compile definitions
+        run: kaitai-struct-compiler $GITHUB_WORKSPACE/definitions/replay_header.ksy -t ${{ matrix.language }} -d ./build
+
+      - name: Store Compiled Parser
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ matrix.language }}
+          if-no-files-found: ignore
+          path: |
+            build
+
