@@ -1,5 +1,5 @@
 meta:
-  id: header
+  id: t_header
   file-extension: header
   endian: le
 seq:
@@ -9,10 +9,8 @@ seq:
       encoding: ASCII
     - id: save_version_f
       type: f4
-    - id: build
+    - id: new_save_version
       type: u4
-    - id: version
-      type: f4
     - id: game_info
       type: game_info_t
     - id: ai
@@ -72,30 +70,30 @@ types:
         type: u1
 #      - id: attributes
 #        type: attributes
-  player_attributes:
-    seq:
-      - id: foreign_diplomacy
-        type: u1
-        repeat: expr
-        repeat-expr: _root.replay.num_players
-      - id: my_diplomacy
-        type: s4
-      - id: allied_los
-        type: u4
-      - id: allied_victory
-        type: b1
-      - id: player_name_length
-        type: u2
-      - id: player_name
-        type: strz
-        size: player_name_length
-        encoding: UTF-8
-      - id: magic
-        content: [0x00, 0x16]
-      - id: num_header_data
-        type: u4
-      - id: magic2
-        content: [0x21]
+  # player_attributes:
+  #   seq:
+  #     - id: foreign_diplomacy
+  #       type: u1
+  #       repeat: expr
+  #       repeat-expr: _root.replay.num_players
+  #     - id: my_diplomacy
+  #       type: s4
+  #     - id: allied_los
+  #       type: u4
+  #     - id: allied_victory
+  #       type: b1
+  #     - id: player_name_length
+  #       type: u2
+  #     - id: player_name
+  #       type: strz
+  #       size: player_name_length
+  #       encoding: UTF-8
+  #     - id: magic
+  #       content: [0x00, 0x16]
+  #     - id: num_header_data
+  #       type: u4
+  #     - id: magic2
+  #       content: [0x21]
 
   player_stats_t:
     seq:
@@ -365,7 +363,7 @@ types:
       type: f4
     - id: num_castles
       type: f4
-    - id: num_wonders
+    - id: num_wonders_2
       type: f4
     - id: kills_by_p1
       type: f4
@@ -672,9 +670,15 @@ types:
         repeat-until: _ == 0
   game_info_t:
     seq:
-      - id: internal_version
+      - id: build
         type: u4
-      - id: game_options_version
+      - id: timestamp
+        type: u4
+      - id: version
+        type: f4
+      - id: interval_version
+        type: u4
+      - id: game_option_version
         type: u4
       - id: num_dlc_ids
         type: u4
@@ -811,7 +815,7 @@ types:
         repeat: expr
         repeat-expr: strings[22].nums[1]
       - id: num_ai_files
-        type: u8
+        type: s8
       - id: ai_files
         type: ai_file
         repeat: expr

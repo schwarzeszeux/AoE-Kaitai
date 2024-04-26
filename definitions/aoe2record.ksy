@@ -2,24 +2,21 @@ meta:
   id: save_game
   file-extension: aoe2record
   endian: le
+  imports:
+   - common
+   - replay_header
 seq:
   - id: header_length
-    type: u8
+    type: u4
+  - id: next_pos
+    type: u4
   - id: header
     size: header_length - 8
-  - id: body_a
-    type: body
-#    type: header
-#    process: zlib
+    process: zlib_headerless
+    type: t_header
 #    size: header_length - 8
 types:
-  header:
-    seq:
-      - id: game_version
-        type: strz
-        size: 8
-        encoding: ASCII
-  body:
+  t_body:
     seq:
       - id: actions
         type: action
@@ -74,7 +71,7 @@ enums:
 instances:
   header_length_i:
     pos: 0
-    type: u8
+    type: u4
   body:
     pos: header_length_i
-    type: body
+    type: t_body
