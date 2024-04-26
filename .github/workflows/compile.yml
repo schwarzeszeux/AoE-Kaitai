@@ -18,7 +18,9 @@ jobs:
   compile_parsers:
     strategy:
       matrix:
-        language: [csharp, java, javascript, python, ruby, php]
+        language: [csharp]
+          
+        #[csharp, java, javascript, python, ruby, php]
 
     runs-on: ubuntu-latest
     steps:
@@ -31,7 +33,7 @@ jobs:
           sudo apt-get install ./kaitai-struct-compiler_0.10_all.deb
           
       - name: Compile definitions
-        run: kaitai-struct-compiler $GITHUB_WORKSPACE/definitions/replay_header.ksy -t ${{ matrix.language }} -d ./build
+        run: kaitai-struct-compiler $GITHUB_WORKSPACE/definitions/aoe2record.ksy -t ${{ matrix.language }} -d ./build
 
       - name: Store Compiled Parser
         uses: actions/upload-artifact@v4
@@ -40,4 +42,48 @@ jobs:
           if-no-files-found: ignore
           path: |
             build
+  
+  compile_csharp:
+    runs-on: ubuntu-latest
+    needs: [compile_parsers]
+
+    steps:
+        - uses: actions/checkout@v4
+        - name: Setup .NET
+          uses: actions/setup-dotnet@v4
+          with:
+            dotnet-version: 8.0.x
+        - uses: actions/download-artifact@v4      
+          name: csharp
+          path: $GITHUB_WORKSPACE/platform/csharp
+        
+        - uses: actions/cache@v3
+          with:
+            path: ~/.nuget/packages
+            # Look to see if there is a cache hit for the corresponding requirements file
+            key: ${{ runner.os }}-nuget-${{ hashFiles('**/*.csproj') }}
+            restore-keys: |
+                ${{ runner.os }}-nuget
+        - name: Restore dependencies
+          run: dotnet restore $GITHUB_WORKSPACE/platform/csharp
+        - name: Build
+          run: dotnet build --configuration Release --no-restore $GITHUB_WORKSPACE/platform/csharp
+        - name: Pack
+          run: dotnet pack --configuration Release --no-restore $GITHUB_WORKSPACE/platform/csharp
+        - name: Store lib
+          uses: actions/upload-artifact@v4
+          with:
+            name: lib-csharp
+            if-no-files-found: ignore
+            path: |
+                $GITHUB_WORKSPACE/platform/csharp/bin/Release/net8.0/
+        - name: Store nuget package
+          uses: actions/upload-artifact@v4
+          with:
+            name: ${{ matrix.language }}
+            if-no-files-found: ignore
+            path: |
+                $GITHUB_WORKSPACE/platform/csharp/bin/Release/*.nupkg
+        
+        
 
