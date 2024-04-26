@@ -33,7 +33,7 @@ jobs:
           sudo apt-get install ./kaitai-struct-compiler_0.10_all.deb
           
       - name: Compile definitions
-        run: kaitai-struct-compiler -t ${{ matrix.language }} -d build $GITHUB_WORKSPACE/definitions/aoe2record.ksy
+        run: kaitai-struct-compiler -t ${{ matrix.language }} --outdir build $GITHUB_WORKSPACE/definitions/aoe2record.ksy
 
       - name: Store Compiled Parser
         uses: actions/upload-artifact@v4
