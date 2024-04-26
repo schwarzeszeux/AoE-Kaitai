@@ -31,11 +31,9 @@ jobs:
         run: |
           curl -LO https://github.com/kaitai-io/kaitai_struct_compiler/releases/download/0.10/kaitai-struct-compiler_0.10_all.deb
           sudo apt-get install ./kaitai-struct-compiler_0.10_all.deb
-
-          mkdir $GITHUB_WORKSPACE/build
           
       - name: Compile definitions
-        run: kaitai-struct-compiler $GITHUB_WORKSPACE/definitions/aoe2record.ksy -t ${{ matrix.language }} -d ./build
+        run: kaitai-struct-compiler -t ${{ matrix.language }} -d ./build $GITHUB_WORKSPACE/definitions/aoe2record.ksy
 
       - name: Store Compiled Parser
         uses: actions/upload-artifact@v4
