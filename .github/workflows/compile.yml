@@ -77,14 +77,16 @@ jobs:
             name: lib-csharp
             if-no-files-found: ignore
             path: |
-                $GITHUB_WORKSPACE/platform/csharp/bin/Release/net8.0/
+                platform/csharp/bin/Release/net8.0/
         - name: Store nuget package
           uses: actions/upload-artifact@v4
           with:
             name: ${{ matrix.language }}
             if-no-files-found: ignore
             path: |
-                $GITHUB_WORKSPACE/platform/csharp/bin/Release/*.nupkg
+                platform/csharp/bin/Release/*.nupkg
+        - name: Publish nuget
+          run: dotnet nuget push "platform/csharp/bin/Release/*.nupkg" --api-key ${{secrets.nuget_api_key}} --source https://api.nuget.org/v3/index.json
         
         
 
