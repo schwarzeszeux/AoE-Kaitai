@@ -1,0 +1,5 @@
+work/
+platform/csharp/.vs/
+platform/csharp/obj/
+platform/csharp/bin/
+build/
