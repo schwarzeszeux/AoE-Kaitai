@@ -88,7 +88,7 @@ jobs:
             latestTag=$(git describe --tags --abbrev=0 2>/dev/null || echo 0.0.1)
             runId=$GITHUB_RUN_ID
             packageVersion="${latestTag//v}-build.${runId}"
-            dotnet pack --configuration Release --no-restore --include-symbols --include-source -p:PackageVersion=$packageVersion $GITHUB_WORKSPACE/platform/csharp
+            dotnet pack --configuration Release --no-restore --include-symbols -p:PackageVersion=$packageVersion $GITHUB_WORKSPACE/platform/csharp
         - name: Store nupkg
           uses: actions/upload-artifact@v4
           with:
