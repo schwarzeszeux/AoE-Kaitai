@@ -72,7 +72,7 @@ seq:
       otherwise with the initial player data.
 instances:
   save_version:
-    value: 'old_save_version == -1 ? new_save_version.x100 : (old_save_version * 100 + 0.5).to_i'
+    value: 'old_save_version == -1 ? new_save_version.x100 : (old_save_version * 100 + 0.5).to_i.as<s4>'
     doc: |
       Save version * 100 as an integer, e.g. 1334 (13.34), 2522 (25.22), 3700 (37.0),
       5070 (50.7), 6150 (61.5), 6430 (64.3), 6660 (66.6), 6720 (67.2), 6890 (68.9).
@@ -104,7 +104,7 @@ types:
           plain value 37 in some early 37 builds.
     instances:
       x100:
-        value: 'raw == 37 ? 3700 : ((raw >> 16) * 100 + ((raw & 0xffff) * 100 + 32768) / 65536).as<s4>'
+        value: 'raw == 37 ? (3700).as<s4> : ((raw >> 16) * 100 + ((raw & 0xffff) * 100 + 32768) / 65536).as<s4>'
         doc: Save version * 100.
 
   de_string:
@@ -428,9 +428,10 @@ types:
     instances:
       map_size_id:
         value: map_size_raw
-        enum: map_size
         if: _root.save_version < 6150
-        doc: Map size setting, only stored here before 61.5.
+        doc: |
+          Map size setting (enum `map_size`), only stored here before 61.5. (Not typed as the enum:
+          the Go target can't compile an enum instance that may fail.)
       map_size_tiles:
         value: map_size_raw
         if: _root.save_version >= 6150
@@ -676,12 +677,12 @@ types:
         if: _root.save_version >= 6150
     instances:
       num_tiles:
-        value: size_x * size_y
+        value: (size_x * size_y).as<s8>
       tile_size:
         value: >-
-          _root.save_version >= 6200 ? 10 :
+          (_root.save_version >= 6200 ? 10 :
           _root.save_version >= 1303 ? 9 :
-          tile_size_probe.value > 1000 ? 9 : 7
+          tile_size_probe.value > 1000 ? 9 : 7).as<s8>
         doc: Size of one tile record in bytes.
   map_zone:
     seq:
@@ -709,7 +710,7 @@ types:
       instance because there can be up to 480 * 480 of them.
     params:
       - id: tile_size
-        type: s4
+        type: s8
     instances:
       items:
         pos: 0
@@ -719,7 +720,7 @@ types:
   tile:
     params:
       - id: tile_size
-        type: s4
+        type: s8
     seq:
       - id: terrain_type
         type: u1

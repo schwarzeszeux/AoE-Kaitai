@@ -103,12 +103,12 @@ types:
         if: has_checksum
     instances:
       has_checksum:
-        value: ofs_start + 8 <= _io.size and next_u4 == 0
+        value: ofs_start + 8 <= _io.size.as<s8> and next_u4 == 0
         doc: A checksum block follows if the next u4 is 0 (otherwise it is the next operation type).
       next_u4:
         pos: ofs_start + 4
         type: u4
-        if: ofs_start + 8 <= _io.size
+        if: ofs_start + 8 <= _io.size.as<s8>
   sync_checksum:
     params:
       - id: ofs_start
@@ -146,7 +146,7 @@ types:
         type: u4
       de_fits:
         value: >-
-          (ofs_start + 360 == _io.size or (ofs_start + 364 <= _io.size and op_after_de >= 1 and op_after_de <= 6))
+          (ofs_start + 360 == _io.size.as<s8> or (ofs_start + 364 <= _io.size.as<s8> and op_after_de >= 1 and op_after_de <= 6))
           and (de_slots[0].player_number == 0 or de_slots[0].player_number == 1)
           and (de_slots[1].player_number == 0 or de_slots[1].player_number == 2)
           and (de_slots[2].player_number == 0 or de_slots[2].player_number == 3)
@@ -161,20 +161,20 @@ types:
       op_after_de:
         pos: ofs_start + 360
         type: u4
-        if: ofs_start + 364 <= _io.size
+        if: ofs_start + 364 <= _io.size.as<s8>
       de_slots:
         pos: ofs_start + 4
         type: sync_player_stats
         repeat: expr
         repeat-expr: 8
-        if: ofs_start + 360 <= _io.size
+        if: ofs_start + 360 <= _io.size.as<s8>
         doc: The per-player statistics read ahead, for `de_fits`.
       legacy_fits:
-        value: ofs_start + 32 <= _io.size and op_after_legacy >= 1 and op_after_legacy <= 6
+        value: ofs_start + 32 <= _io.size.as<s8> and op_after_legacy >= 1 and op_after_legacy <= 6
       op_after_legacy:
         pos: ofs_start + 28
         type: u4
-        if: ofs_start + 32 <= _io.size
+        if: ofs_start + 32 <= _io.size.as<s8>
   sync_player_stats:
     seq:
       - id: unknown0
@@ -309,22 +309,24 @@ types:
       block_type:
         pos: ofs_end - 4
         type: u4
-        enum: postgame_block_type
+        doc: |
+          Enum `postgame_block_type`. (Not typed as the enum: the Go target can't compile an enum
+          instance that may fail.)
       len_block:
         pos: ofs_end - 8
         type: u4
       block:
-        pos: ofs_end - 8 - len_block
+        pos: ofs_end - 8 - len_block.as<s8>
         size: len_block
         type:
-          switch-on: block_type
+          switch-on: block_type.as<s4>
           cases:
-            'postgame_block_type::world_time': postgame_world_time
-            'postgame_block_type::leaderboards': postgame_leaderboards
+            1: postgame_world_time
+            2: postgame_leaderboards
             _: postgame_unknown_block
       previous_block:
         pos: 0
-        type: postgame_block(ofs_end - 8 - len_block, num_remaining - 1)
+        type: postgame_block(ofs_end - 8 - len_block.as<s8>, num_remaining - 1)
         if: num_remaining > 1
   postgame_world_time:
     seq:
@@ -466,7 +468,7 @@ types:
       - id: object_ids
         type: u4
         repeat: expr
-        repeat-expr: '(_io.size - (_root.save_version >= 6000 ? 24 : 22)) / 4'
+        repeat-expr: '(_io.size - (_root.save_version >= 6000 ? 24 : 22).as<s8>) / 4'
 
   action_selection:
     doc: Payload that is just a selection (stop, autoscout, ...).
@@ -770,7 +772,7 @@ types:
       - id: object_ids
         type: u4
         repeat: expr
-        repeat-expr: '(_io.size - (_root.save_version >= 6630 ? 25 : 24)) / 4'
+        repeat-expr: '(_io.size - (_root.save_version >= 6630 ? 25 : 24).as<s8>) / 4'
 
   action_flare:
     seq:
@@ -811,7 +813,7 @@ types:
       - id: object_ids
         type: u4
         repeat: expr
-        repeat-expr: '(_io.size - (_root.save_version >= 6150 ? 33 : 32)) / 4'
+        repeat-expr: '(_io.size - (_root.save_version >= 6150 ? 33 : 32).as<s8>) / 4'
 
   action_gather_point:
     seq:
@@ -833,7 +835,7 @@ types:
       - id: building_ids
         type: u4
         repeat: expr
-        repeat-expr: '(_io.size - (_root.save_version >= 6300 ? 25 : 24)) / 4'
+        repeat-expr: '(_io.size - (_root.save_version >= 6300 ? 25 : 24).as<s8>) / 4'
 
   action_buy_sell:
     doc: buy (123) and sell (122) at the market.
@@ -874,7 +876,7 @@ types:
       - id: building_ids
         type: u4
         repeat: expr
-        repeat-expr: '(_io.size - (_root.save_version >= 6630 ? 20 : 16)) / 4'
+        repeat-expr: '(_io.size - (_root.save_version >= 6630 ? 20 : 16).as<s8>) / 4'
 
   action_de_tribute:
     doc: Tribute of several resources at once (196).

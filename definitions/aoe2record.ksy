@@ -48,8 +48,8 @@ doc: |
 
   Decompression uses the custom process routine `raw_inflate` (raw DEFLATE, RFC 1951), because
   the built-in `zlib` process expects a zlib (RFC 1950) wrapper. An implementation must be
-  supplied for the target language (C#: class `Kaitai.RawInflate` implementing
-  `Kaitai.CustomDecoder`).
+  supplied for the target language; `platform/<language>` has them for C#, Python, Java,
+  JavaScript, Go and Rust (see `scripts/build.sh`).
 
   Format knowledge is based on aoc-mgz (https://github.com/happyleavesaoc/aoc-mgz, MIT) and
   aoe2rec (https://github.com/aoe2ct/aoe2rec, MIT) and verified against recordings with save
@@ -72,10 +72,10 @@ types:
         type: u4
         doc: Absolute file offset of the next chapter, 0 if this is the last chapter.
       - id: header
-        size: header_end_pos - _io.pos
+        size: header_end_pos.as<s8> - _io.pos
         process: raw_inflate
         type: aoe2record_header
       - id: body
-        size: '(next_chapter_pos != 0 ? next_chapter_pos : _io.size) - _io.pos'
+        size: '(next_chapter_pos != 0 ? next_chapter_pos.as<s8> : _io.size.as<s8>) - _io.pos'
         type: aoe2record_body(header.save_version)
         doc: Operations of this chapter; decoded lazily through `body.operations`.
