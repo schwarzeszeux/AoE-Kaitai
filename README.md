@@ -57,4 +57,4 @@ A recording that fails to parse goes into `tests/recordings` with a line in `exp
 
 ## Releases
 Pushing a tag `v<version>` (e.g. `v1.0.0`), or making a release with a new tag on GitHub, runs the tests
-and, if all pass, publishes the release with the parsers and the NuGet package (secret `nuget_api_key`).
+and, if all pass, publishes the release with the parsers and the NuGet package (nuget.org trusted publishing).
