@@ -133,10 +133,20 @@ types:
         if: not is_de
     instances:
       is_de:
-        value: de_flag != 0
+        value: de_flag != 0 or not legacy_fits
+        doc: |
+          DE per-player statistics, or the 24 bytes of earlier versions. The u4 read as `de_flag` (as
+          aoc-mgz does) is player 1's fourth statistic, which is 0 when player 1 has no objects (an
+          empty slot, or defeated), so the old layout is only taken when an operation follows it.
       de_flag:
         pos: ofs_start + 16
         type: u4
+      legacy_fits:
+        value: ofs_start + 32 <= _io.size and op_after_legacy >= 1 and op_after_legacy <= 6
+      op_after_legacy:
+        pos: ofs_start + 28
+        type: u4
+        if: ofs_start + 32 <= _io.size
   sync_player_stats:
     seq:
       - id: unknown0

@@ -330,9 +330,18 @@ types:
         type: de_ai_file
         repeat: expr
         repeat-expr: num_ai_files.as<s4>
-      - id: unknown_25_02
-        size: 8
+      - id: num_xs_files
+        type: u8
         if: _root.save_version >= 2502
+        doc: |
+          XS scripts of mods the game uses, usually none. (Read as 8 unknown bytes before, which broke
+          on the rare game that has one.)
+      - id: xs_files
+        type: de_ai_file
+        repeat: expr
+        repeat-expr: num_xs_files.as<s4>
+        if: _root.save_version >= 2502
+        doc: Same layout as the AI files, e.g. "SUBSCRIBEDMODS:XS:<file>.xs:<mod id>_<mod name>:false".
       - id: guid
         size: 16
         doc: Game GUID (identical for all recordings of the same game).
@@ -535,6 +544,7 @@ types:
         if: _root.save_version >= 6430
 
   de_ai_file:
+    doc: An AI or XS script file of a mod.
     seq:
       - id: unknown1
         type: u4
