@@ -1,0 +1,11 @@
+{
+  "name": "aoe2record",
+  "version": "0.0.0",
+  "description": "Age of Empires II: DE recorded game parser, generated from the AoE-Kaitai definitions",
+  "main": "Aoe2record.js",
+  "license": "MIT",
+  "repository": "github:schwarzeszeux/AoE-Kaitai",
+  "dependencies": {
+    "kaitai-struct": "^0.11.0"
+  }
+}

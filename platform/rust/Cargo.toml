@@ -1,0 +1,11 @@
+[package]
+name = "aoe2record"
+version = "0.0.0"
+edition = "2018"
+description = "Age of Empires II: DE recorded game parser, generated from the AoE-Kaitai definitions"
+license = "MIT"
+repository = "https://github.com/schwarzeszeux/AoE-Kaitai"
+
+[dependencies]
+kaitai = { git = "https://github.com/kaitai-io/kaitai_struct_rust_runtime", tag = "v0.11.0" }
+flate2 = "1.0"

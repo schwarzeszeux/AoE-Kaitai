@@ -1,22 +1,23 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
+  <!-- scripts/build.sh csharp <dir> puts the generated parser next to this file -->
   <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-    <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-  </PropertyGroup>
-
-  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <LangVersion>latest</LangVersion>
+    <PackageId>AoEKaitai</PackageId>
+    <Authors>schwarzeszeux</Authors>
+    <Description>Age of Empires II: DE recorded game parser, generated from the AoE-Kaitai definitions</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/schwarzeszeux/AoE-Kaitai</RepositoryUrl>
     <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../../README.md" Pack="true" PackagePath="\"/>
-</ItemGroup>
+    <None Include="README.md" Pack="true" PackagePath="\" />
+  </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="KaitaiStruct.Runtime.CSharp" Version="0.10.0" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="KaitaiStruct.Runtime.CSharp" Version="0.11.0" />
   </ItemGroup>
 
 </Project>
