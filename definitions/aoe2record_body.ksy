@@ -75,7 +75,7 @@ types:
             'operation_type::sync': op_sync(_io.pos)
             'operation_type::viewlock': op_viewlock
             'operation_type::chat': op_chat
-            'operation_type::start': op_start
+            'operation_type::start': op_start(_io.pos)
             'operation_type::postgame': op_postgame
 
   op_action:
@@ -197,27 +197,51 @@ types:
 
   op_start:
     doc: |
-      Recording meta data (aoc-mgz `fast.meta`, aoe2rec `Pregame`). `rec_owner` and
-      `reveal_map` were checked against the header in all test recordings; aoe2rec names the
-      fields differently (shifted by one).
+      Recording meta data (aoc-mgz `fast.meta`, aoe2rec `Pregame`) as the first operation of a body.
+      `rec_owner` and `reveal_map` were checked against the header in all test recordings; aoe2rec
+      names the fields differently (shifted by one).
+
+      The same operation type also turns up later in a body (in about 1 of 700 DE recordings),
+      followed by only 8 bytes: an s4 (0 or -1) and a u4 (seen 3, 25, 2306, 2349), meaning unknown.
+      aoc-mgz reads nothing after it there.
+    params:
+      - id: ofs_start
+        type: s8
+        doc: Absolute position after the operation type (4 for the first operation of a body).
     seq:
       - id: checksum_interval
         type: u4
+        if: is_meta
         doc: Number of syncs between two sync checksums (500).
       - id: multiplayer
         type: u4
+        if: is_meta
       - id: unknown1
         type: u4
+        if: is_meta
       - id: rec_owner
         type: u4
+        if: is_meta
         doc: Player number of the recording player (same as header `replay.rec_player`).
       - id: reveal_map
         type: u4
+        if: is_meta
         doc: Same value as the header setting `de.reveal_map` (0 = normal, 1 = explored, 2 = all visible).
       - id: unknown2
         type: u4
+        if: is_meta
       - id: unknown3
         type: u4
+        if: is_meta
+      - id: later_unknown1
+        type: s4
+        if: not is_meta
+      - id: later_unknown2
+        type: u4
+        if: not is_meta
+    instances:
+      is_meta:
+        value: ofs_start == 4
 
   op_postgame:
     doc: |
