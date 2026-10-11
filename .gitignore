@@ -3,3 +3,6 @@ platform/csharp/.vs/
 platform/csharp/obj/
 platform/csharp/bin/
 build/
+tests/csharp/bin/
+tests/csharp/obj/
+__pycache__/
