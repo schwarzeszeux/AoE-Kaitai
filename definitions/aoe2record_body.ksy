@@ -133,14 +133,42 @@ types:
         if: not is_de
     instances:
       is_de:
-        value: de_flag != 0 or not legacy_fits
+        value: de_flag != 0 or de_fits or not legacy_fits
         doc: |
           DE per-player statistics, or the 24 bytes of earlier versions. The u4 read as `de_flag` (as
-          aoc-mgz does) is player 1's fourth statistic, which is 0 when player 1 has no objects (an
-          empty slot, or defeated), so the old layout is only taken when an operation follows it.
+          aoc-mgz does) is player 1's fourth statistic, which is 0 when player 1 has no displayable
+          objects (an empty slot, or defeated). Then the DE layout is still taken if it fits, and the
+          old one only if it doesn't and an operation follows the old one. (Checking only the old
+          layout misread recordings where a defeated player 1 still had 1 to 6 objects: that count
+          is where the old layout expects the next operation type.)
       de_flag:
         pos: ofs_start + 16
         type: u4
+      de_fits:
+        value: >-
+          (ofs_start + 360 == _io.size or (ofs_start + 364 <= _io.size and op_after_de >= 1 and op_after_de <= 6))
+          and (de_slots[0].player_number == 0 or de_slots[0].player_number == 1)
+          and (de_slots[1].player_number == 0 or de_slots[1].player_number == 2)
+          and (de_slots[2].player_number == 0 or de_slots[2].player_number == 3)
+          and (de_slots[3].player_number == 0 or de_slots[3].player_number == 4)
+          and (de_slots[4].player_number == 0 or de_slots[4].player_number == 5)
+          and (de_slots[5].player_number == 0 or de_slots[5].player_number == 6)
+          and (de_slots[6].player_number == 0 or de_slots[6].player_number == 7)
+          and (de_slots[7].player_number == 0 or de_slots[7].player_number == 8)
+        doc: |
+          The DE layout ends at the end of the body or right before an operation, and its slots hold
+          the player numbers 1 to 8 in order (0 for an unused slot).
+      op_after_de:
+        pos: ofs_start + 360
+        type: u4
+        if: ofs_start + 364 <= _io.size
+      de_slots:
+        pos: ofs_start + 4
+        type: sync_player_stats
+        repeat: expr
+        repeat-expr: 8
+        if: ofs_start + 360 <= _io.size
+        doc: The per-player statistics read ahead, for `de_fits`.
       legacy_fits:
         value: ofs_start + 32 <= _io.size and op_after_legacy >= 1 and op_after_legacy <= 6
       op_after_legacy:
