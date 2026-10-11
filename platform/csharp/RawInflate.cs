@@ -1,7 +1,7 @@
 using System.IO;
 using System.IO.Compression;
 
-namespace Kaitai
+namespace AoEKaitai
 {
     /// <summary>
     /// Kaitai Struct custom process routine <c>raw_inflate</c> (see definitions/aoe2record.ksy).
@@ -9,7 +9,7 @@ namespace Kaitai
     /// Age of Empires II recorded games store their headers. The built-in <c>process: zlib</c>
     /// expects a zlib (RFC 1950) wrapper and cannot be used.
     /// </summary>
-    public class RawInflate : CustomDecoder
+    public class RawInflate : Kaitai.CustomDecoder
     {
         public byte[] Decode(byte[] src)
         {

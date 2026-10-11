@@ -2,6 +2,7 @@
 // with the expected values (see tests/test_recordings.py).
 using System.IO.Compression;
 using System.Text.Json;
+using AoEKaitai;
 using Kaitai;
 
 var directory = args[0];

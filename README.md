@@ -21,7 +21,7 @@ generated for C#, Python, Java, JavaScript, Go and Rust, ready to use, and the C
 
 The header of a recording is raw DEFLATE, which the definitions decode with the custom process routine
 `raw_inflate`. Its implementation for each language is in `platform/<language>` and included in the
-release files.
+release files. The C# parser is in the namespace `AoEKaitai`, the Java one in the package `aoekaitai`.
 
 Python example:
 

@@ -26,7 +26,7 @@ cp -R "$root/platform/$lang/." "$out/"
 
 case $lang in
 csharp)
-    $ksc -t csharp --outdir "$out" "$ksy"
+    $ksc -t csharp --dotnet-namespace AoEKaitai --outdir "$out" "$ksy"
     cp "$root/README.md" "$out/"
     ;;
 python)
