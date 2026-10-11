@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!-- Run with the parser built by scripts/build.sh csharp in the property Parser and tests/recordings as
+       the argument (see the workflow) -->
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="$(Parser)/AoEKaitai.csproj" />
+  </ItemGroup>
+
+</Project>

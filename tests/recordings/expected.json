@@ -1,0 +1,65 @@
+[
+  {
+    "file": "512695789.aoe2record.gz",
+    "operations": 940034,
+    "chats": 281,
+    "worldTime": 5932286,
+    "broke": "header: the XS script of a mod after the AI files"
+  },
+  {
+    "file": "512688550.aoe2record.gz",
+    "operations": 303517,
+    "chats": 23,
+    "worldTime": 2928135,
+    "broke": "sync: DE statistics where player 1 has no displayable objects and no operation follows the old layout"
+  },
+  {
+    "file": "512624689.aoe2record.gz",
+    "operations": 351597,
+    "chats": 42,
+    "worldTime": 8504454,
+    "broke": "sync: DE statistics where player 1 has no displayable objects and no operation follows the old layout"
+  },
+  {
+    "file": "512657810.aoe2record.gz",
+    "operations": 72100,
+    "chats": 18,
+    "worldTime": 1845094,
+    "broke": "a start operation later in the body, with only 8 bytes after it"
+  },
+  {
+    "file": "512647119.aoe2record.gz",
+    "operations": 498120,
+    "chats": 22,
+    "worldTime": 4295046,
+    "broke": "a start operation later in the body, with only 8 bytes after it"
+  },
+  {
+    "file": "512651181.aoe2record.gz",
+    "operations": 72807,
+    "chats": 23,
+    "worldTime": 1995129,
+    "broke": "a start operation later in the body, with only 8 bytes after it"
+  },
+  {
+    "file": "512636602.aoe2record.gz",
+    "operations": 478465,
+    "chats": 3,
+    "worldTime": 4218040,
+    "broke": "a start operation later in the body, with only 8 bytes after it"
+  },
+  {
+    "file": "511663436.aoe2record.gz",
+    "operations": 211180,
+    "chats": 28,
+    "worldTime": 2779393,
+    "broke": "sync: DE statistics of a defeated player 1 whose object count sits where the old layout expects an operation"
+  },
+  {
+    "file": "512153165.aoe2record.gz",
+    "operations": 317391,
+    "chats": 15,
+    "worldTime": 4144005,
+    "broke": "sync: DE statistics of a defeated player 1 whose object count sits where the old layout expects an operation"
+  }
+]
